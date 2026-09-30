@@ -1,0 +1,27 @@
+# One-click Render deploy (Dashboard → New → Blueprint → pick this repo).
+services:
+  - type: web
+    name: trackfire
+    runtime: node
+    plan: free
+    region: frankfurt     # closest Render region to Kurdistan
+    buildCommand: "echo no build step"
+    startCommand: "node server/index.js"
+    healthCheckPath: /health
+    # Accounts and ranks live in ./data. On the free plan that folder is wiped on every
+    # restart → turn on the free Supabase backup (SUPABASE_URL + SUPABASE_KEY, see DEPLOY.md),
+    # and/or use plan: starter and un-comment the disk + DATA_DIR below.
+    # disk:
+    #   name: data
+    #   mountPath: /opt/render/project/src/data
+    #   sizeGB: 1
+    envVars:
+      - key: NODE_VERSION
+        value: "22"
+      # Cloud backup of player progress (Supabase Storage) — fill these in on the Render dashboard:
+      - key: SUPABASE_URL
+        sync: false
+      - key: SUPABASE_KEY
+        sync: false
+      # - key: DATA_DIR
+      #   value: /opt/render/project/src/data

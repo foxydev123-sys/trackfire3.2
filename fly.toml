@@ -1,0 +1,21 @@
+# fly launch --copy-config   (then: fly deploy)
+app = "trackfire-CHANGE-ME"
+primary_region = "fra"
+
+[http_service]
+  internal_port = 8080
+  force_https = true
+  auto_stop_machines = "off"     # the social hub needs the server always on
+  auto_start_machines = true
+  min_machines_running = 1
+
+[env]
+  DATA_DIR = "/data"
+
+[mounts]
+  source = "kt_data"          # create once: fly volumes create kt_data --size 1
+  destination = "/data"
+
+[[vm]]
+  size = "shared-cpu-1x"
+  memory = "256mb"
