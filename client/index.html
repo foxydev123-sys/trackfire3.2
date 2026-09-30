@@ -1,0 +1,322 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<meta name="theme-color" content="#101315">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="description" content="Kurdish Tank: private low-poly tank battles in Hawler and beyond, for you and your friends, right in the browser.">
+<title>Kurdish Tank</title>
+<link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32.png">
+<link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
+<link rel="apple-touch-icon" sizes="180x180" href="icons/apple-touch-icon.png">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bungee&family=Chakra+Petch:wght@500;600;700&family=Barlow:wght@400;500;600&family=Noto+Kufi+Arabic:wght@500;700;800&display=swap">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<canvas id="view"></canvas>
+<div id="ov" class="ov"></div>
+<!-- name plates that hang over the tanks standing on the menu stage -->
+<div id="stageNames" class="stage-names" aria-hidden="true"></div>
+<!-- one "+" for each open place in your squad, standing beside your tank -->
+<div id="stageAdds" class="stage-adds"></div>
+
+<!-- ============ LOADING ============ -->
+<div id="loading" class="loading"><div class="mn-logo small">KURDISH<span> TANK</span></div><p id="loadMsg">Loading 3D engine…</p></div>
+
+<!-- ============ MAIN MENU ============ -->
+<section id="scr-menu" class="screen" hidden>
+  <div class="menu-shade"></div>
+  <!-- Everything that is not "play now" lives behind one corner button, so the middle of the
+       screen stays clear and the tanks are never hidden behind a wall of menu. -->
+  <button class="mn-more" id="btnMore" type="button" aria-expanded="false">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+    <span data-i18n="more">MENU</span><i class="dot" id="moreDot" hidden></i>
+  </button>
+  <div class="mn-drawer" id="mnDrawer" hidden>
+    <div class="dr-head"><span data-i18n="more">MENU</span>
+      <button class="btn sm ghost" id="btnMoreClose" type="button" aria-label="Close">✕</button></div>
+    <div class="dr-grid">
+    <button class="ebtn" id="btnShop" type="button"><i class="e3" style="background-image:var(--ic-shop)" aria-hidden="true"></i><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9h16l-1.5 11h-13zM8 9V6a4 4 0 0 1 8 0v3" stroke="currentColor" stroke-width="1.6" fill="none"/></svg><span data-i18n="shop">SHOP</span><b class="badge-n" id="bgShop" hidden></b></button>
+    <button class="ebtn" id="btnQuests" type="button"><i class="e3" style="background-image:var(--ic-scroll)" aria-hidden="true"></i><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3h12v18H6zM9 8h6M9 12h6M9 16h4" stroke="currentColor" stroke-width="1.6" fill="none"/></svg><span data-i18n="quests">QUESTS</span><b class="badge-n" id="bgQuests" hidden></b></button>
+    <button class="ebtn" id="btnGoals" type="button"><i class="e3" style="background-image:var(--ic-scroll)" aria-hidden="true"></i><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="10" r="5.5" stroke="currentColor" stroke-width="1.6" fill="none"/><path d="M12 7.6l1 2 2.2.3-1.6 1.5.4 2.2-2-1-2 1 .4-2.2-1.6-1.5 2.2-.3z" fill="currentColor"/><path d="M8.6 15.2 7 22l5-2.4L17 22l-1.6-6.8" stroke="currentColor" stroke-width="1.5" fill="none"/></svg><span data-i18n="goals">GOALS</span><b class="badge-n" id="bgGoals" hidden></b></button>
+    <button class="ebtn" id="btnDaily" type="button"><i class="e3" style="background-image:var(--ic-gift)" aria-hidden="true"></i><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 10h16v10H4zM3 7h18v3H3zM12 7v13M12 7c-2-4-6-3-5 0M12 7c2-4 6-3 5 0" stroke="currentColor" stroke-width="1.6" fill="none"/></svg><span data-i18n="dailyShort">DAILY</span><b class="badge-n" id="bgDaily" hidden></b></button>
+    <button class="ebtn" id="btnWheel" type="button"><i class="e3" style="background-image:var(--ic-wheel)" aria-hidden="true"></i><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8.5" stroke="currentColor" stroke-width="1.6" fill="none"/><path d="M12 3.5v17M3.5 12h17M6 6l12 12M18 6 6 18" stroke="currentColor" stroke-width="1.1"/></svg><span data-i18n="wheelShort">WHEEL</span><b class="badge-n" id="bgWheel" hidden></b></button>
+    <button class="btn" id="navProfile" type="button"><svg class="bi" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="3.6" stroke="currentColor" stroke-width="1.6" fill="none"/><path d="M4.8 20a7.2 7.2 0 0 1 14.4 0" stroke="currentColor" stroke-width="1.6" fill="none"/></svg><span data-i18n="navProfile">PROFILE</span></button>
+    <button class="btn" id="navBoards" type="button"><svg class="bi" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20h4v-7H4zM10 20h4V4h-4zM16 20h4v-10h-4z" stroke="currentColor" stroke-width="1.6" fill="none"/></svg><span data-i18n="navBoards">LEADERBOARDS</span></button>
+    <button class="btn" id="navFriends" type="button"><svg class="bi" viewBox="0 0 24 24" aria-hidden="true"><circle cx="9" cy="8.5" r="3.2" stroke="currentColor" stroke-width="1.6" fill="none"/><path d="M3 19a6 6 0 0 1 12 0" stroke="currentColor" stroke-width="1.6" fill="none"/><path d="M16 6.2a3.2 3.2 0 0 1 0 6.1M17 14.4a6 6 0 0 1 4 4.6" stroke="currentColor" stroke-width="1.5" fill="none"/></svg><span data-i18n="navFriends">FRIENDS</span><b class="badge-n" id="frBadge" hidden>0</b></button>
+    </div>
+    <div class="btn-row"><button class="btn ghost" id="btnModes" type="button"><svg class="bi" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 7.5 9 5l6 2.5L21 5v11.5L15 19l-6-2.5L3 19z" stroke="currentColor" stroke-width="1.6" fill="none"/><path d="M9 5v11.5M15 7.5V19" stroke="currentColor" stroke-width="1.4"/></svg><span data-i18n="modesBtn">GAME MODES</span></button><button class="btn ghost" id="btnSettings" type="button"><svg class="bi" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="1.6" fill="none"/><path d="M12 2.8v2.4M12 18.8v2.4M21.2 12h-2.4M5.2 12H2.8M18.5 5.5l-1.7 1.7M7.2 16.8l-1.7 1.7M18.5 18.5l-1.7-1.7M7.2 7.2 5.5 5.5" stroke="currentColor" stroke-width="1.5"/></svg><span data-i18n="settings">SETTINGS</span></button></div>
+    <button class="card me-card" id="meCard" type="button"></button>
+    <div class="card fr-mini" id="friendsMini"></div>
+    <div class="langsel"><span data-i18n="language">Language</span><span class="seg" data-lang-seg><button type="button" data-lang="ku" lang="ckb">کوردی</button><button type="button" data-lang="ar" lang="ar">العربية</button><button type="button" data-lang="en" lang="en">English</button></span></div>
+    <p class="menu-links"><a href="privacy" target="_blank" rel="noopener" data-i18n="privacy">Privacy policy</a></p>
+  </div>
+  <div class="menu-col">
+    <div class="mn-logo"><span class="lat">KURDISH<br><span>TANK</span></span><span class="loc" data-i18n="logo">KURDISH TANK</span><small class="loc">KURDISH TANK</small></div>
+    <input class="inp" id="nameInp" type="hidden" maxlength="14" autocomplete="off" spellcheck="false">
+    <p class="idline" id="idLine" hidden></p>
+    <button class="btn primary" id="btnQuick" type="button"><svg class="bi" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 4.5 19 12 5 19.5z" fill="currentColor"/></svg><span data-i18n="quick">QUICK MATCH</span> <small id="quickHint">THIS WEEK</small></button>
+    <button class="btn ranked" id="btnRanked" type="button"><svg class="bi" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h16l-2.5 6.5A6 6 0 0 1 12 15a6 6 0 0 1-5.5-3.5z" stroke="currentColor" stroke-width="1.6" fill="none"/><path d="M12 15v4M8.5 21h7" stroke="currentColor" stroke-width="1.6"/><path d="M4 6H2.2a3 3 0 0 0 3 3M20 6h1.8a3 3 0 0 1-3 3" stroke="currentColor" stroke-width="1.4" fill="none"/></svg><span data-i18n="rankedBtn">RANKED</span> <small data-i18n="rankedSub">4v4 · RANDOM MODE</small></button>
+    <button class="btn" id="btnCreate" type="button"><svg class="bi" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 10.5 12 5l8 5.5V20H4z" stroke="currentColor" stroke-width="1.6" fill="none"/><path d="M12 11v5M9.5 13.5h5" stroke="currentColor" stroke-width="1.6"/></svg><span data-i18n="create">CREATE ROOM</span> <small data-i18n="getCode">GET A CODE</small></button>
+    
+    <button class="btn" id="btnPractice" type="button"><svg class="bi" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="7.5" stroke="currentColor" stroke-width="1.6" fill="none"/><circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="1.6" fill="none"/><path d="M12 2.5v3M12 18.5v3M2.5 12h3M18.5 12h3" stroke="currentColor" stroke-width="1.4"/></svg><span data-i18n="practice">PRACTICE</span> <small data-i18n="vsBots">VS BOTS · OFFLINE</small></button>
+    <div class="join"><svg class="bi" viewBox="0 0 24 24" aria-hidden="true"><path d="M10 7.5 5 12l5 4.5M5 12h10M15 5h4v14h-4" stroke="currentColor" stroke-width="1.6" fill="none"/></svg><input class="inp code" id="codeInp" placeholder="ROOM CODE" data-i18n-ph="codePh" data-i18n-aria="codePh" maxlength="5" autocomplete="off" spellcheck="false" aria-label="Room code" dir="ltr"><button class="btn" id="btnJoin" type="button" data-i18n="join">JOIN</button></div>
+    <p class="lead-note" id="leadNote" hidden></p>
+    <p class="err" id="menuErr" hidden></p>
+    <p class="note" id="menuNote" data-i18n="practiceNote" hidden>This preview plays offline against bots. To play online with friends, put the server online (see DEPLOY.md) and open that address.</p>
+  </div>
+  <aside class="home-side" id="homeSide">
+    <div class="eco-side" id="ecoSide" hidden>
+      <button class="card tank-card" id="tankCard" type="button"></button>
+      <div class="eco-row">
+      <button class="ebtn" id="btnGarage" type="button"><i class="e3" style="background-image:var(--ic-garage)" aria-hidden="true"></i><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 15h18v3H3zM6 12h11l2 3H4zM9 9h6v3H9zM15 10.5h6" stroke="currentColor" stroke-width="1.6" fill="none"/></svg><span data-i18n="garage">GARAGE</span><b class="badge-n" id="bgGarage" hidden></b></button>
+      </div>
+    </div>
+    <!-- your squad: who is in it, who leads it, and a way out of it -->
+    <div class="card squad-bar" id="squadBar" hidden></div>
+    <p class="season-line" id="seasonLine"></p>
+  </aside>
+</section>
+
+<!-- ============ ONLINE PAGES (profile, leaderboards, friends, ranked, modes, rank tiers) ============ -->
+<section id="scr-page" class="screen" hidden>
+  <div class="menu-shade page-shade"></div>
+  <div class="page">
+    <div class="page-head"><button class="btn ghost back" id="btnBack" type="button"><span class="arr" aria-hidden="true">←</span> <span data-i18n="back">BACK</span></button><h2 id="pageTitle"></h2></div>
+    <div id="pageBody" class="page-body"></div>
+  </div>
+</section>
+
+<!-- ============ LOBBY ============ -->
+<section id="scr-setup" class="screen" hidden>
+  <div class="menu-shade"></div>
+  <div class="lobby">
+    <div class="card lb-card">
+      <div class="su-head"><h2 data-i18n="setupTitle">MATCH SETUP</h2><small data-i18n="setupSub">Pick how you want to play, then open the lobby</small></div>
+      <div class="lb-maps" id="lbMaps">
+        <button class="map" data-map="hawler" type="button"><img id="thHawler" alt=""><span><span data-i18n="mapHawler">Hawler City</span><small data-i18n="subHawler">CITADEL · SHAR PARK</small></span></button>
+        <button class="map" data-map="desert" type="button"><img id="thDesert" alt=""><span><span data-i18n="mapDesert">Dune Crossing</span><small data-i18n="subDesert">DESERT · MEDIUM</small></span></button>
+        <button class="map" data-map="forest" type="button"><img id="thForest" alt=""><span><span data-i18n="mapForest">Pinewood Ford</span><small data-i18n="subForest">FOREST · MEDIUM</small></span></button>
+        <button class="map" data-map="stadium" type="button" hidden><img id="thStadium" alt=""><span><span data-i18n="mapStadium">Hawler Stadium</span><small data-i18n="subStadium">TANK BALL ONLY</small></span></button>
+      </div>
+      <div class="lb-mode">
+        <span class="seg modes6" id="lbModeSeg"><button type="button" data-mode="tdm"><i class="mode-pic" style="background-image:var(--mode-tdm,url(img/modes/tdm.jpg))" aria-hidden="true"></i><span data-i18n="m_tdm">Team Battle</span></button><button type="button" data-mode="ffa"><i class="mode-pic" style="background-image:var(--mode-ffa,url(img/modes/ffa.jpg))" aria-hidden="true"></i><span data-i18n="m_ffa">Free-for-all</span></button><button type="button" data-mode="ctf"><i class="mode-pic" style="background-image:var(--mode-ctf,url(img/modes/ctf.jpg))" aria-hidden="true"></i><span data-i18n="m_ctf">Capture the Flag</span></button><button type="button" data-mode="koh"><i class="mode-pic" style="background-image:var(--mode-koh,url(img/modes/koh.jpg))" aria-hidden="true"></i><span data-i18n="m_koh">King of the Citadel</span></button><button type="button" data-mode="lts"><i class="mode-pic" style="background-image:var(--mode-lts,url(img/modes/lts.jpg))" aria-hidden="true"></i><span data-i18n="m_lts">Last Tank Standing</span></button><button type="button" data-mode="rush"><i class="mode-pic" style="background-image:var(--mode-rush,url(img/modes/rush.jpg))" aria-hidden="true"></i><span data-i18n="m_rush">Power-up Rush</span></button><button type="button" data-mode="convoy"><i class="mode-pic" style="background-image:var(--mode-convoy,url(img/modes/convoy.jpg))" aria-hidden="true"></i><span data-i18n="m_convoy">Convoy Escort</span></button><button type="button" data-mode="jugg"><i class="mode-pic" style="background-image:var(--mode-jugg,url(img/modes/jugg.jpg))" aria-hidden="true"></i><span data-i18n="m_jugg">Juggernaut</span></button><button type="button" data-mode="ball"><i class="mode-pic" style="background-image:var(--mode-ball,url(img/modes/ball.jpg))" aria-hidden="true"></i><span data-i18n="m_ball">Tank Ball</span></button><button type="button" data-mode="surv"><i class="mode-pic" style="background-image:var(--mode-surv,url(img/modes/surv.jpg))" aria-hidden="true"></i><span data-i18n="m_surv">Survival Waves</span></button><button type="button" data-mode="potato"><i class="mode-pic" style="background-image:var(--mode-potato,url(img/modes/potato.jpg))" aria-hidden="true"></i><span data-i18n="m_potato">Hot Potato</span></button><button type="button" data-mode="bounty"><i class="mode-pic" style="background-image:var(--mode-bounty,url(img/modes/bounty.jpg))" aria-hidden="true"></i><span data-i18n="m_bounty">Bounty Hunt</span></button></span>
+        <span class="seg tod-seg" id="lbTodSeg"><button type="button" data-v="day" data-i18n="todDay">DAY</button><button type="button" data-v="night" data-i18n="todNight">NIGHT</button><button type="button" data-v="random" data-i18n="todRandom">RANDOM</button></span>
+      </div>
+      <div class="lb-foot su-foot">
+        <button class="btn ghost" id="btnSuBack" type="button" data-i18n="back">BACK</button>
+        <button class="btn primary" id="btnSuGo" type="button" data-i18n="createLobby">CREATE LOBBY</button>
+      </div>
+    </div>
+  </div>
+</section>
+<section id="scr-lobby" class="screen" hidden>
+  <div class="menu-shade"></div>
+  <div class="lobby">
+    <div class="card lb-card">
+      <div class="lb-head">
+        <div><small data-i18n="roomCodeLbl">ROOM CODE · SEND IT TO FRIENDS</small><div class="code" id="lbCode" dir="ltr">-----</div></div>
+        <div class="lb-share">
+          <button class="lb-copy" id="btnCopy" type="button"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="5" y="5" width="9" height="9" rx="1.5"/><path d="M3 11V3a1 1 0 0 1 1-1h7"/></svg><span data-i18n="copyInvite">COPY INVITE LINK</span></button>
+          <div class="lb-link" id="lbLink"></div>
+        </div>
+      </div>
+      <div class="lb-setup" id="lbSetup"></div>
+      <div class="lb-mode">
+        <span class="lb-kind" id="lbKind" hidden></span>
+        <span id="lbCount">1 / 8 PLAYERS</span>
+      </div>
+      <ul class="lb-players" id="lbPlayers"></ul>
+      <p class="lb-note" id="lbNote"></p>
+      <div class="lb-actions">
+        <button class="btn" id="btnReady" type="button">READY</button>
+        <button class="btn" id="btnTeam" type="button" data-i18n="switchTeam">SWITCH TEAM</button>
+        <button class="btn" id="btnAddBot" type="button" data-i18n="addBot">+ BOT</button>
+        <button class="btn" id="btnDelBot" type="button" data-i18n="delBot">− BOT</button>
+        <button class="btn primary" id="btnStart" type="button" data-i18n="start">START MATCH</button>
+      </div>
+      <div class="lb-foot"><button class="btn ghost" id="btnWait" type="button" hidden data-i18n="sqWait">BROWSE MENU</button><button class="btn ghost" id="btnLeave" type="button" data-i18n="leave">LEAVE ROOM</button><button class="btn ghost" id="btnInvite" type="button" data-i18n="inviteFriends">INVITE FRIENDS</button><button class="btn ghost" id="btnSettings2" type="button" data-i18n="settings">SETTINGS</button></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ IN-GAME HUD ============ -->
+<div id="hud" class="hudwrap" hidden>
+  <div class="vl" id="hudVL">
+    <div class="vign" id="vign"></div>
+    <div class="killfeed" id="killfeed"></div>
+    <div class="h-score pnl" id="hScore">
+      <div class="team blue"><b id="sBlue">0</b><span id="sBlueLbl">BLUE</span></div>
+      <div class="clock"><span id="clock">10:00</span><small id="modeLbl">TEAM DEATHMATCH · TO 30</small></div>
+      <div class="team red"><span id="sRedLbl">RED</span><b id="sRed">0</b></div>
+    </div>
+    <div class="topright">
+      <div class="netchip pnl"><span class="dot" id="netDot"></span><span id="pingTxt">– ms</span><span class="sep">|</span><span id="roomTxt">ROOM</span></div>
+      <button class="m-btn pnl" id="btnScores" type="button" aria-label="Scoreboard"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M4 6h16M4 12h16M4 18h10"/></svg></button>
+      <button class="m-btn pnl" id="btnPause" type="button" aria-label="Menu"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><circle cx="12" cy="12" r="3.2"/><path d="M12 2.5v3M12 18.5v3M2.5 12h3M18.5 12h3M5.3 5.3l2.1 2.1M16.6 16.6l2.1 2.1M5.3 18.7l2.1-2.1M16.6 7.4l2.1-2.1"/></svg></button>
+    </div>
+    <div class="miniboard pnl" id="miniboard"></div>
+    <div class="connbar pnl" id="connBar" hidden>RECONNECTING…</div>
+    <div class="objline pnl" id="objLine" hidden></div>
+    <div class="obj-toast" id="objToast" hidden></div>
+    <div class="debug pnl" id="debug" hidden><div class="t">NETWORK / PERF <b>F3</b></div><div id="dbgRows"></div><canvas class="spark" id="spark" width="216" height="26"></canvas></div>
+    <div class="scoreboard pnl" id="scoreboard" hidden></div>
+    <div class="deathcard pnl" id="deathcard" hidden><div class="big" id="dcTitle"></div><p id="dcSub"></p></div>
+    <div class="endcard pnl" id="endcard" hidden></div>
+    <div class="keys" id="keys">
+      <span class="pnl"><kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd> <span data-i18n="kDrive">drive</span></span>
+      <span class="pnl"><kbd>MOUSE</kbd> <span data-i18n="kAim">aim</span></span><span class="pnl"><kbd>CLICK</kbd> <span data-i18n="kFire">fire</span></span><span class="pnl"><kbd>Q</kbd> <span data-i18n="kPower">power</span></span><span class="pnl"><kbd>V</kbd> <span data-i18n="kTalk">talk</span></span>
+      <span class="pnl"><kbd>TAB</kbd> <span data-i18n="kScores">scores</span></span><span class="pnl"><kbd>ESC</kbd> <span data-i18n="kMenu">menu</span></span>
+    </div>
+    <div class="pu-chips" id="puChips"></div>
+    <div class="pu-toast" id="puToast" hidden></div>
+    <div class="h-health pnl" id="hHealth">
+      <div class="hh-top"><span class="hh-name" id="hhName">You</span><span class="hh-num"><b id="hpNum">100</b> / <span id="hpMax">100</span></span></div>
+      <div class="hh-bar"><div class="lag" id="hpLag"></div><i id="hpBar"></i><div class="ticks"></div></div>
+      <div class="hh-sub" id="hhSub">BLUE TEAM</div>
+    </div>
+    <div class="h-reload pnl" id="hReload">
+      <svg viewBox="0 0 34 34" aria-hidden="true"><rect x="12" y="6" width="10" height="20" rx="2" fill="#d9a441"/><path d="M12 10 Q17 0 22 10Z" fill="#f1c56a"/><rect x="11" y="24" width="12" height="5" rx="1" fill="#9a6a24"/></svg>
+      <div class="hr-body"><div class="hr-label"><span id="rlLabel" class="ready">READY</span><em id="rlTime"></em></div><div class="hr-bar"><i id="rlBar"></i></div></div>
+    </div>
+    <div class="h-abil pnl" id="abChip" hidden>
+      <b id="abChipIcon">⚡</b>
+      <div class="ha-body"><div class="ha-label"><span id="abChipName">POWER</span><em id="abChipKey">Q</em></div><div class="ha-bar"><i id="abChipBar"></i></div><div class="ha-stars" id="abChipStars"></div></div>
+    </div>
+    <div class="h-voice pnl" id="vcPanel" hidden><b class="vc-h"><span class="vc-ic">🎤</span><span id="vcTitle">VOICE</span><em id="vcHow"></em></b><ul id="vcList"></ul></div>
+    <div class="minimap pnl" id="minimap"><canvas id="mm" width="300" height="300"></canvas><span class="compass">N</span></div>
+  </div>
+</div>
+
+<!-- touch controls live in an unscaled layer so fingers map 1:1 -->
+<div id="touch" class="touch" hidden>
+  <div class="stick l" id="moveBase"><div class="knob" id="moveKnob"></div><small data-i18n="move">MOVE</small></div>
+  <div class="stick r" id="aimBase"><div class="knob" id="aimKnob"></div><small data-i18n="aim">AIM</small></div>
+  <div class="firebtn" id="fireBtn"><svg viewBox="0 0 152 152" aria-hidden="true"><circle cx="76" cy="76" r="70" fill="none" stroke="rgba(0,0,0,.35)" stroke-width="7"/><circle id="fireRing" cx="76" cy="76" r="70" fill="none" stroke="#ffd27a" stroke-width="7" stroke-linecap="round" transform="rotate(-90 76 76)" stroke-dasharray="439.8" stroke-dashoffset="0"/></svg><span data-i18n="fire">FIRE</span></div>
+  <div class="micbtn" id="vcBtn" hidden><span>🎤</span></div>
+  <div class="abilbtn" id="abBtn" hidden>
+    <svg viewBox="0 0 120 120" aria-hidden="true"><circle cx="60" cy="60" r="54" fill="none" stroke="rgba(0,0,0,.35)" stroke-width="7"/><circle id="abRing" cx="60" cy="60" r="54" fill="none" stroke="#c9a4ff" stroke-width="7" stroke-linecap="round" transform="rotate(-90 60 60)" stroke-dasharray="339.3" stroke-dashoffset="0"/></svg>
+    <b id="abIcon">⚡</b><em id="abCd"></em><i class="ab-knob" id="abKnob"></i>
+  </div>
+</div>
+<div id="tedit" class="tedit" hidden>
+  <p class="te-hint" data-i18n="teHint">Drag the controls where you want them. Tap one to pick it.</p>
+  <div class="st-row"><span data-i18n="teControl">Control</span><span class="seg" id="teSel"><button type="button" data-v="move" data-i18n="move">MOVE</button><button type="button" data-v="aim" data-i18n="aim">AIM</button><button type="button" data-v="fire" data-i18n="fire">FIRE</button><button type="button" data-v="power" data-i18n="abPower">POWER</button><button type="button" data-v="mic" data-i18n="teMic">MIC</button></span></div>
+  <div class="st-row"><span data-i18n="teSize">Size</span><span class="rng"><input type="range" min="60" max="160" step="5" id="teSize" aria-label="Size"><em></em></span></div>
+  <div class="st-row"><span data-i18n="teAlpha">Visibility</span><span class="rng"><input type="range" min="15" max="100" step="5" id="teAlpha" aria-label="Visibility"><em></em></span></div>
+  <div class="st-row"><span data-i18n="teFloat">Stick follows your thumb</span><button type="button" class="tg" id="teFloat"></button></div>
+  <div class="te-btns"><button type="button" class="btn sm ghost" id="teReset" data-i18n="teReset">RESET</button><button type="button" class="btn sm primary" id="teDone" data-i18n="done">DONE</button></div>
+</div>
+
+<!-- ============ FIRST RUN: name, age group, city ============ -->
+<div id="welcome" class="modal" hidden>
+  <div class="card modal-card wc-card">
+    <div class="wc-steps"><i class="on"></i><i></i><i></i></div>
+    <div class="wc-step" data-step="0">
+      <h4 data-i18n="wcHi">WELCOME</h4>
+      <p class="sub" data-i18n="wcNameSub">Pick the name other players will see. You can change it later in your profile.</p>
+      <input class="inp" id="wcName" maxlength="14" autocomplete="off" spellcheck="false" dir="auto" placeholder="Your name" data-i18n-ph="namePh">
+      <p class="err" id="wcErr" hidden></p>
+    </div>
+    <div class="wc-step" data-step="1" hidden>
+      <h4 data-i18n="wcAge">HOW OLD ARE YOU?</h4>
+      <p class="sub" data-i18n="wcAgeSub">Choose the year you were born. We only keep your age group, never the date.</p>
+      <div class="wc-years" id="wcYears"></div>
+      <p class="sub sm" data-i18n="wcAgeWhy">Players under 13 get voice chat switched off, to keep them safe.</p>
+    </div>
+    <div class="wc-step" data-step="2" hidden>
+      <h4 data-i18n="wcCity">WHERE ARE YOU FROM?</h4>
+      <p class="sub" data-i18n="wcCitySub">This shows on your profile. Choose Skip if you would rather not say.</p>
+      <div class="wc-cities" id="wcCities"></div>
+      <input class="inp" id="wcCityOther" maxlength="24" autocomplete="off" spellcheck="false" dir="auto" placeholder="Your city" data-i18n-ph="wcCityPh" hidden>
+    </div>
+    <div class="wc-btns">
+      <button type="button" class="btn ghost" id="wcBack" data-i18n="wcBack" hidden>BACK</button>
+      <button type="button" class="btn ghost" id="wcSkip" data-i18n="wcSkip" hidden>SKIP</button>
+      <button type="button" class="btn primary" id="wcNext" data-i18n="wcNext">NEXT</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============ PAUSE ============ -->
+<div id="pause" class="modal" hidden>
+  <div class="card modal-card">
+    <h4 data-i18n="menu">MENU</h4>
+    <button class="btn primary" id="btnResume" type="button" data-i18n="resume">RESUME</button>
+    <button class="btn" id="btnSettings3" type="button" data-i18n="settings">SETTINGS</button>
+    <button class="btn" id="btnEndMatch" type="button" data-i18n="endMatch">END MATCH (HOST)</button>
+    <button class="btn" id="btnFullscreen" type="button" data-i18n="fullscreen">FULLSCREEN</button>
+    <button class="btn ghost" id="btnQuit" type="button" data-i18n="leaveMatch">LEAVE MATCH</button>
+  </div>
+</div>
+
+<!-- ============ SETTINGS ============ -->
+<div id="settings" class="modal" hidden>
+  <div class="card modal-card wide">
+    <h4 data-i18n="settings">SETTINGS</h4>
+    <div class="st-row"><span data-i18n="language">Language</span><span class="seg" data-lang-seg><button type="button" data-lang="ku" lang="ckb">کوردی</button><button type="button" data-lang="ar" lang="ar">العربية</button><button type="button" data-lang="en" lang="en">English</button></span></div>
+    <div class="set-grid">
+      <div>
+        <div class="st-row"><span data-i18n="graphics">Graphics</span><span class="seg" data-set="quality"><button type="button" data-v="low" data-i18n="low">LOW</button><button type="button" data-v="medium" data-i18n="med">MED</button><button type="button" data-v="high" data-i18n="high">HIGH</button></span></div>
+        <div class="st-row"><span data-i18n="shadows">Shadows</span><button type="button" class="tg" data-set="shadows"></button></div>
+        <div class="st-row"><span data-i18n="particles">Particles</span><span class="seg" data-set="particles"><button type="button" data-v="low" data-i18n="low">LOW</button><button type="button" data-v="full" data-i18n="full">FULL</button></span></div>
+        <div class="st-row"><span data-i18n="renderScale">Render scale</span><span class="rng"><input type="range" min="50" max="100" step="5" data-set="renderScale" aria-label="Render scale"><em></em></span></div>
+        <div class="st-row"><span data-i18n="autoRes">Auto resolution (keeps FPS up)</span><button type="button" class="tg" data-set="autoRes"></button></div>
+        <div class="st-row"><span data-i18n="timeOfDay">Time of day</span><span class="seg" data-set="sun"><button type="button" data-v="morning" data-i18n="morning">MORNING</button><button type="button" data-v="midday" data-i18n="midday">MIDDAY</button><button type="button" data-v="golden" data-i18n="golden">GOLDEN</button></span></div>
+        <div class="st-row"><span data-i18n="camShake">Camera shake</span><button type="button" class="tg" data-set="shake"></button></div>
+        <div class="st-row"><span data-i18n="xrayOpt">Show my tank behind buildings</span><button type="button" class="tg" data-set="xray"></button></div>
+      </div>
+      <div>
+        <div class="st-row"><span data-i18n="pcControls">PC controls</span><span class="seg" data-set="controls"><button type="button" data-v="dir" data-i18n="ctlDir">DIRECTION</button><button type="button" data-v="classic" data-i18n="ctlClassic">CLASSIC</button></span></div>
+        <div class="st-row"><span data-i18n="touchCtl">Touch controls</span><span class="seg" data-set="touch"><button type="button" data-v="auto" data-i18n="auto">AUTO</button><button type="button" data-v="on" data-i18n="on">ON</button><button type="button" data-v="off" data-i18n="off">OFF</button></span></div>
+        <div class="st-row"><span data-i18n="releaseFire">Aim stick: let go to fire</span><button type="button" class="tg" data-set="releaseFire"></button></div>
+        <div class="st-row"><span data-i18n="moveSens">Move stick sensitivity</span><span class="rng"><input type="range" min="60" max="160" step="10" data-set="moveSens" aria-label="Move stick sensitivity"><em></em></span></div>
+        <div class="st-row"><span data-i18n="aimSens">Aim stick sensitivity</span><span class="rng"><input type="range" min="60" max="160" step="10" data-set="aimSens" aria-label="Aim stick sensitivity"><em></em></span></div>
+        <div class="st-row"><span data-i18n="touchLayout">Touch layout</span><button type="button" class="btn sm" id="btnTouchEdit" data-i18n="editLayout">EDIT</button></div>
+        <div class="st-row"><span data-i18n="master">Master</span><span class="rng"><input type="range" min="0" max="100" data-set="master" aria-label="Master volume"><em></em></span></div>
+        <div class="st-row"><span data-i18n="music">Music</span><span class="rng"><input type="range" min="0" max="100" data-set="music" aria-label="Music volume"><em></em></span></div>
+        <div class="st-row"><span data-i18n="sfx">SFX</span><span class="rng"><input type="range" min="0" max="100" data-set="sfx" aria-label="Effects volume"><em></em></span></div>
+        <div class="st-row"><span data-i18n="mute">Mute all</span><button type="button" class="tg" data-set="mute"></button></div>
+        <div class="st-row"><span data-i18n="vcOn">Voice chat</span><button type="button" class="tg" data-set="voice"></button></div>
+        <div class="st-row"><span data-i18n="vcMode">Microphone</span><span class="seg" data-set="voiceMode"><button type="button" data-v="push" data-i18n="vcPush">HOLD V</button><button type="button" data-v="open" data-i18n="vcOpen">ALWAYS ON</button></span></div>
+        <div class="st-row"><span data-i18n="vcTalk">Talk to</span><span class="seg" data-set="voiceTalk"><button type="button" data-v="team" data-i18n="vcTeam">TEAM</button><button type="button" data-v="all" data-i18n="vcAll">EVERYONE</button></span></div>
+        <div class="st-row"><span data-i18n="vcHear">Listen to</span><span class="seg" data-set="voiceHear"><button type="button" data-v="team" data-i18n="vcTeam">TEAM</button><button type="button" data-v="all" data-i18n="vcAll">EVERYONE</button></span></div>
+        <div class="st-row"><span data-i18n="vcVol">Voice volume</span><span class="rng"><input type="range" min="0" max="100" step="5" data-set="voiceVol" aria-label="Voice volume"><em></em></span></div>
+        <div class="st-row"><span class="muted" style="font-size:12.5px" data-i18n="vcNote">Voices go straight between players, never through the server.</span></div>
+        <div class="st-row"><span data-i18n="debugPanel">Debug panel (F3)</span><button type="button" class="tg" data-set="debug"></button></div>
+      </div>
+    </div>
+    <details class="nettest"><summary>Network test tools (for developers)</summary>
+      <p>Adds fake delay to this browser's connection so you can check that other tanks still move smoothly.</p>
+      <div class="st-row"><span>Simulated ping</span><span class="seg" id="simPing"><button type="button" data-v="0">OFF</button><button type="button" data-v="20">20</button><button type="button" data-v="50">50</button><button type="button" data-v="100">100</button><button type="button" data-v="150">150 MS</button></span></div>
+      <div class="st-row"><span>Jitter</span><span class="seg" id="simJit"><button type="button" data-v="0">0</button><button type="button" data-v="10">±10</button><button type="button" data-v="30">±30</button><button type="button" data-v="60">±60 MS</button></span></div>
+    </details>
+    <!-- Test tool: tap the "Secret button" row 13 times to reveal the gem button. The gem button only
+         does anything when the server runs with TEST_CHEATS=1 (the default while building); on a
+         server started with TEST_CHEATS=0 it answers "not available". -->
+    <div class="st-row"><button type="button" class="secretbtn" id="stBrand" data-i18n="secretBtn">SECRET BUTTON</button><button type="button" class="btn sm" id="btnCheat" hidden data-i18n="cheatBtn">+10,000 GEMS (TEST)</button></div>
+    <div class="st-row acc-row"><span data-i18n="accountLbl">Account</span><span class="row"><a class="linkbtn" href="privacy" target="_blank" rel="noopener" data-i18n="privacy">Privacy policy</a><button type="button" class="btn sm ghost danger-t" id="btnDelAcc" data-i18n="deleteAcc">DELETE MY ACCOUNT</button></span></div>
+    <p class="set-hint" data-i18n="controlsHint">Controls — PC: WASD drive · mouse aim · click/Space fire · Tab scores · Esc menu · F3 debug. Phone: left thumb drives, right thumb aims, hold FIRE.</p>
+    <button class="btn primary" id="btnCloseSettings" type="button" data-i18n="done">DONE</button>
+  </div>
+</div>
+
+<div id="rotate" class="rotate" hidden><div><svg viewBox="0 0 64 64" width="64" height="64" fill="none" stroke="#f5a53c" stroke-width="3"><rect x="20" y="8" width="24" height="44" rx="4"/><path d="M50 40a18 18 0 0 1-18 18M50 40l-5 1M50 40l1 5"/></svg><p data-i18n="rotate">Turn your phone sideways to play</p></div></div>
+<div id="toast" class="toast" hidden></div>
+<!-- ============ ONLINE OVERLAYS ============ -->
+<div id="walletBar" class="wallet-bar" hidden><button type="button" id="wbCoins" class="wb"><i class="ic i3 i-coin" aria-hidden="true"></i><b id="wbCoinsN">0</b><i aria-hidden="true">+</i></button><button type="button" id="wbGems" class="wb"><i class="ic i3 i-gem" aria-hidden="true"></i><b id="wbGemsN">0</b><i aria-hidden="true">+</i></button><button type="button" id="wbParts" class="wb"><i class="ic i3 i-parts" aria-hidden="true"></i><b id="wbPartsN">0</b><i aria-hidden="true">+</i></button></div>
+<div id="ecoModal" class="modal eco-modal" hidden><div class="card modal-card eco-card" id="ecoCard"></div></div>
+<div id="queueBar" class="queue-bar" hidden><span class="spin" aria-hidden="true"></span><span id="queueTxt"></span><button type="button" class="btn sm ghost" id="queueCancel" data-i18n="cancel">CANCEL</button></div>
+<div id="notifs" class="notifs" aria-live="polite"></div>
+<div id="foundModal" class="modal found-modal" hidden><div class="card modal-card wide found-card" id="foundCard"></div></div>
+<div id="dlg" class="modal" hidden><div class="card modal-card" id="dlgCard"></div></div>
+
+<script src="server-config.js"></script>
+<script type="module" src="js/main.js"></script>
+</body>
+</html>

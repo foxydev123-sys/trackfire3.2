@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Kurdish Tank Trailer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bungee&family=Chakra+Petch:wght@500;600;700&family=Noto+Kufi+Arabic:wght@500;700;800&display=swap">
+<style>
+:root { --bg:#111315; --panel:#1b1e21; --ink:#f4efe6; --mute:#a9b0b5; --acc:#f5a53c; --line:rgba(255,255,255,.12); }
+@media (prefers-color-scheme: light) { :root:not([data-theme="dark"]) { --bg:#f3efe8; --panel:#fff; --ink:#1c1c1c; --mute:#5c6166; --line:rgba(0,0,0,.12); } }
+:root[data-theme="dark"] { --bg:#111315; --panel:#1b1e21; --ink:#f4efe6; --mute:#a9b0b5; --line:rgba(255,255,255,.12); }
+* { box-sizing:border-box; }
+body { margin:0; background:var(--bg); color:var(--ink); font:500 15px/1.45 "Chakra Petch", system-ui, sans-serif; }
+main { max-width:1100px; margin:0 auto; padding:18px 16px 40px; display:grid; gap:14px; }
+h1 { font:400 26px Bungee, Impact, sans-serif; margin:0; color:var(--acc); letter-spacing:.02em; }
+p { margin:0; color:var(--mute); }
+.bar { display:flex; flex-wrap:wrap; gap:10px; align-items:end; background:var(--panel); border:1px solid var(--line); border-radius:10px; padding:12px; }
+.grp { display:grid; gap:4px; }
+.grp > span { font-size:12px; color:var(--mute); text-transform:uppercase; letter-spacing:.08em; }
+.seg { display:flex; border:1px solid var(--line); border-radius:8px; overflow:hidden; }
+.seg button { border:0; background:transparent; color:var(--ink); padding:9px 14px; font:inherit; font-weight:700; cursor:pointer; }
+.seg button[aria-pressed="true"] { background:var(--acc); color:#1b1206; }
+.seg button.ar { font-family:"Noto Kufi Arabic", sans-serif; }
+input[type=text] { background:transparent; color:var(--ink); border:1px solid var(--line); border-radius:8px; padding:9px 10px; font:inherit; width:210px; max-width:100%; }
+.go { border:0; border-radius:8px; padding:11px 18px; font:700 16px "Chakra Petch", sans-serif; cursor:pointer; }
+.go.p { background:var(--acc); color:#1b1206; } .go.s { background:transparent; color:var(--ink); border:1px solid var(--line); }
+.go:disabled { opacity:.45; cursor:default; }
+.stage { background:#000; border-radius:10px; overflow:hidden; display:grid; place-items:center; min-height:200px; border:1px solid var(--line); }
+#out { display:block; max-width:100%; max-height:72vh; width:auto; height:auto; }
+.prog { height:6px; background:var(--line); border-radius:3px; overflow:hidden; } .prog i { display:block; height:100%; width:0; background:var(--acc); }
+#status { font-weight:700; color:var(--ink); }
+.done { display:grid; gap:10px; background:var(--panel); border:1px solid var(--line); border-radius:10px; padding:12px; }
+.done video { width:100%; max-height:60vh; background:#000; border-radius:8px; }
+.row { display:flex; flex-wrap:wrap; gap:10px; align-items:center; }
+ol { margin:0; padding-inline-start:20px; color:var(--mute); } ol b { color:var(--ink); }
+</style>
+</head>
+<body>
+<main>
+  <div><h1>KURDISH TANK — TRAILER</h1><p>The same 54-second trailer, with the menus and text in Kurdish or Arabic. Music and sound are generated live, so keep this tab in front while it records.</p></div>
+  <ol>
+    <li>Pick <b>Kurdish</b>, press <b>Record video</b>, wait 54 seconds, then <b>Save video</b>.</li>
+    <li>Switch to <b>Arabic</b> and do the same. You get the same video in both languages.</li>
+  </ol>
+  <div class="bar">
+    <div class="grp"><span>Language</span><div class="seg" id="lang"><button class="ar" data-v="ku" aria-pressed="true">کوردی</button><button class="ar" data-v="ar" aria-pressed="false">العربية</button><button data-v="en" aria-pressed="false">English</button></div></div>
+    <div class="grp"><span>Format</span><div class="seg" id="fmt"><button data-v="h" aria-pressed="true">16:9 YouTube / Steam</button><button data-v="v" aria-pressed="false">9:16 TikTok</button></div></div>
+    <div class="grp"><span>Quality</span><div class="seg" id="res"><button data-v="1080" aria-pressed="true">1080p</button><button data-v="720" aria-pressed="false">720p (faster)</button></div></div>
+    <div class="grp"><span>Link or @account at the end (optional)</span><input type="text" id="link" placeholder="@kurdishtank" maxlength="40"></div>
+  </div>
+  <div class="row">
+    <button class="go s" id="prev" disabled>▶ Preview</button>
+    <button class="go p" id="rec" disabled>● Record video</button>
+    <button class="go s" id="stop" disabled>■ Stop</button>
+    <span id="status">Loading…</span>
+  </div>
+  <div class="prog"><i id="bar"></i></div>
+  <div class="stage"><canvas id="out" width="1920" height="1080"></canvas></div>
+  <div class="done" id="done" hidden>
+    <video id="vid" controls playsinline></video>
+    <div class="row"><button class="go p" id="save">⬇ Save video</button><span id="saveMsg"></span></div>
+  </div>
+</main>
+<script>
+// Seeded randomness so every take is the same video.
+(function () { let gen = Math.random.bind(Math);
+  Math.random = () => gen();
+  window.__seed = (s) => { let a = s >>> 0; gen = () => { a = (a + 0x6D2B79F5) >>> 0; let t = a; t = Math.imul(t ^ (t >>> 15), t | 1); t ^= t + Math.imul(t ^ (t >>> 7), t | 61); return ((t ^ (t >>> 14)) >>> 0) / 4294967296; }; };
+})();
+</script>
+<script type="module">
+const $ = (id) => document.getElementById(id);
+const st = (s) => { $('status').textContent = s; };
+const pick = (id) => $(id).querySelector('[aria-pressed="true"]').dataset.v;
+for (const id of ['lang', 'fmt', 'res']) $(id).addEventListener('click', (e) => { const b = e.target.closest('button'); if (!b) return; for (const x of $(id).children) x.setAttribute('aria-pressed', x === b ? 'true' : 'false'); });
+let T, run = null, last = null, dl = null;
+try { T = await import('./js/trailer.js'); await T.init($('out'), st); }
+catch (e) { st('Could not load the 3D engine: ' + (e.message || e)); throw e; }
+(async () => { try { dl = window.claude ? await window.claude.use('downloads') : null; } catch (e) { dl = null; } })();
+st('Ready. Press Preview or Record.'); $('prev').disabled = $('rec').disabled = false;
+
+function start(record) {
+  if (run) return;
+  const lang = pick('lang'), vert = pick('fmt') === 'v', q = +pick('res');
+  const res = q === 720 ? [1280, 720] : [1920, 1080];
+  $('prev').disabled = $('rec').disabled = true; $('stop').disabled = false; $('done').hidden = !!record ? true : $('done').hidden;
+  st(record ? 'Recording… keep this tab open and in front.' : 'Playing preview…');
+  run = T.play({ lang, vert, res, record, link: $('link').value.trim(),
+    onTick: (t) => { $('bar').style.width = (t / T.LEN * 100).toFixed(1) + '%'; },
+    onEnd: (r) => { run = null; $('prev').disabled = $('rec').disabled = false; $('stop').disabled = true; $('bar').style.width = '100%';
+      if (!r) { st('Preview finished.'); return; }
+      last = { ...r, name: `kurdish-tank-trailer-${lang}${vert ? '-tiktok' : ''}.${r.ext}` };
+      $('vid').src = URL.createObjectURL(r.blob); $('done').hidden = false; $('saveMsg').textContent = '';
+      st(`Done — ${(r.blob.size / 1048576).toFixed(1)} MB ${r.ext.toUpperCase()}. Save it below.`); } });
+}
+$('prev').onclick = () => start(false);
+$('rec').onclick = () => start(true);
+$('stop').onclick = () => { if (run) { run.stop(); run = null; } $('prev').disabled = $('rec').disabled = false; $('stop').disabled = true; st('Stopped.'); };
+$('save').onclick = async () => {
+  if (!last) return;
+  if (dl) {
+    try { await dl.save({ filename: last.name, data: last.blob }); $('saveMsg').textContent = 'Saved.'; return; }
+    catch (e) { if (e && e.code === 'declined') { $('saveMsg').textContent = 'Not saved.'; return; } }
+  }
+  const a = document.createElement('a'); a.href = $('vid').src; a.download = last.name; document.body.appendChild(a); a.click(); a.remove();
+  $('saveMsg').textContent = 'If nothing downloaded: right-click the video (or press and hold on a phone) and choose Save.';
+};
+</script>
+</body>
+</html>

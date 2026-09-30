@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Delete your Kurdish Tank account</title>
+<link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32.png">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@600;700&family=Barlow:wght@400;600&family=Noto+Kufi+Arabic:wght@500;700&display=swap">
+<style>
+:root{--bg:#101315;--card:#171b1e;--ink:#f4efe6;--mute:#aeb5ba;--acc:#f5a53c;--bad:#ef5a4a;--ok:#8fd16a;color-scheme:dark}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 "Barlow",system-ui,sans-serif;padding:24px 16px 48px}
+html[dir=rtl] body{font-family:"Noto Kufi Arabic",system-ui,sans-serif}
+main{max-width:640px;margin:0 auto;display:grid;gap:16px}
+h1{margin:0;font:700 26px/1.2 "Chakra Petch",sans-serif;color:var(--acc)}
+html[dir=rtl] h1{font-family:"Noto Kufi Arabic",sans-serif}
+.card{background:var(--card);border:1px solid rgba(255,255,255,.12);border-radius:10px;padding:16px;display:grid;gap:10px}
+ul{margin:0;padding-inline-start:20px}
+.langs{display:flex;gap:6px;justify-content:flex-end}
+.langs button{border:1px solid rgba(255,255,255,.25);background:transparent;color:#fff;border-radius:6px;padding:5px 10px;font:600 13px "Noto Kufi Arabic","Chakra Petch",sans-serif;cursor:pointer}
+.langs button[aria-pressed=true]{background:var(--acc);color:#1b1206;border-color:var(--acc)}
+label{display:grid;gap:4px;font-weight:600}
+input[type=text],input[type=email]{background:#0b0d0f;border:1px solid rgba(255,255,255,.25);border-radius:6px;color:#fff;padding:10px;font:inherit}
+button.big{border:0;border-radius:7px;padding:12px 16px;font:700 16px "Chakra Petch","Noto Kufi Arabic",sans-serif;cursor:pointer}
+.danger{background:var(--bad);color:#fff}.primary{background:var(--acc);color:#1b1206}
+button:disabled{opacity:.45;cursor:default}
+.muted{color:var(--mute);font-size:14px}.ok{color:var(--ok);font-weight:600}.err{color:var(--bad);font-weight:600}
+.check{display:flex;gap:8px;align-items:flex-start;font-weight:400}
+b.id{unicode-bidi:isolate;direction:ltr}
+</style>
+</head>
+<body>
+<main>
+  <div class="langs" id="langs"><button data-l="ku">کوردی</button><button data-l="ar">العربية</button><button data-l="en">English</button></div>
+  <h1 data-t="title"></h1>
+  <p data-t="intro"></p>
+  <div class="card"><b data-t="whatTitle"></b><ul><li data-t="what1"></li><li data-t="what2"></li><li data-t="what3"></li></ul><p class="muted" data-t="kept"></p></div>
+  <div class="card" id="here" hidden>
+    <b data-t="hereTitle"></b>
+    <p><span data-t="hereText"></span> <b class="id" id="hereId"></b></p>
+    <label class="check"><input type="checkbox" id="sure"> <span data-t="sure"></span></label>
+    <button class="big danger" id="delNow" disabled></button>
+    <p id="delMsg"></p>
+  </div>
+  <form class="card" id="reqForm">
+    <b data-t="reqTitle"></b>
+    <p class="muted" data-t="reqText"></p>
+    <label><span data-t="idLbl"></span><input type="text" id="pid" placeholder="Solomon#4821" dir="ltr" required maxlength="40"></label>
+    <label><span data-t="contactLbl"></span><input type="text" id="contact" dir="ltr" required maxlength="120"></label>
+    <button class="big primary" type="submit" data-t="send"></button>
+    <p id="reqMsg"></p>
+  </form>
+  <p class="muted" data-t="inGame"></p>
+  <p class="muted"><span data-t="contactUs"></span> <b class="id" id="mail"></b></p>
+</main>
+<script>
+const S = {
+  title: ['Delete your Kurdish Tank account', 'حذف حسابك في الدبابة الكردية', 'سڕینەوەی هەژماری تانکی کوردی'],
+  intro: ['You can delete your account and all its data at any time.', 'يمكنك حذف حسابك وجميع بياناته في أي وقت.', 'دەتوانیت هەر کاتێک هەژمارەکەت و هەموو زانیارییەکانی بسڕیتەوە.'],
+  whatTitle: ['What is deleted', 'ما الذي يُحذف', 'چی دەسڕدرێتەوە'],
+  what1: ['Your name and player ID, rank, stats and match history', 'اسمك ومعرّف اللاعب والرتبة والإحصائيات وسجل المباريات', 'ناو و ناسنامەی یاریزان، پلە، ئامار و مێژووی یارییەکانت'],
+  what2: ['Your coins, gems, tanks, chests and quests', 'عملاتك وجواهرك ودباباتك وصناديقك ومهامك', 'دراو، گەوهەر، تانک، سندوق و ئەرکەکانت'],
+  what3: ['Your friends list, chat messages and the reports you sent', 'قائمة أصدقائك ورسائل الدردشة والبلاغات التي أرسلتها', 'لیستی هاوڕێکانت، نامەکانی چات و ئەو ڕاپۆرتانەی ناردووتە'],
+  kept: ['Receipts of real-money purchases are kept without your name, because tax and refund rules require it. Deleting cannot be undone, and gems you bought are lost.', 'تُحفظ إيصالات المشتريات بالمال الحقيقي بدون اسمك لأن قوانين الضرائب والاسترداد تتطلب ذلك. لا يمكن التراجع عن الحذف، وتضيع الجواهر التي اشتريتها.', 'پسووڵەی کڕینی پارەی ڕاستەقینە بێ ناوەکەت دەمێنێتەوە، چونکە یاساکانی باج و گەڕاندنەوە داوای دەکەن. سڕینەوە ناگەڕێتەوە، و ئەو گەوهەرانەی کڕیوتن لەدەست دەچن.'],
+  hereTitle: ['Delete right now', 'احذف الآن', 'ئێستا بیسڕەوە'],
+  hereText: ['This browser is signed in as', 'هذا المتصفح مسجّل باسم', 'ئەم وێبگەڕە چووەتە ژوورەوە بە'],
+  sure: ['I understand that my account and everything in it will be deleted forever.', 'أفهم أن حسابي وكل ما فيه سيُحذف نهائياً.', 'تێدەگەم کە هەژمارەکەم و هەموو شتێکی ناوی بۆ هەمیشە دەسڕدرێتەوە.'],
+  delBtn: ['DELETE MY ACCOUNT', 'احذف حسابي', 'هەژمارەکەم بسڕەوە'],
+  deleted: ['Your account has been deleted.', 'تم حذف حسابك.', 'هەژمارەکەت سڕایەوە.'],
+  reqTitle: ['Ask us to delete an account', 'اطلب منا حذف حساب', 'داوامان لێ بکە هەژمارێک بسڕینەوە'],
+  reqText: ['No longer have the game on this device? Send your player ID and a way to reach you. We check that it is you and delete the account within 30 days.', 'لم تعد اللعبة على هذا الجهاز؟ أرسل معرّف اللاعب وطريقة للتواصل معك. نتحقق من هويتك ونحذف الحساب خلال 30 يوماً.', 'یارییەکە چیتر لەسەر ئەم ئامێرە نییە؟ ناسنامەی یاریزان و ڕێگایەک بۆ پەیوەندی بنێرە. دڵنیا دەبینەوە کە خۆتی و لە ماوەی 30 ڕۆژدا هەژمارەکە دەسڕینەوە.'],
+  idLbl: ['Player ID (Name#1234)', 'معرّف اللاعب (الاسم#1234)', 'ناسنامەی یاریزان (ناو#1234)'],
+  contactLbl: ['Email or phone number', 'البريد الإلكتروني أو رقم الهاتف', 'ئیمەیڵ یان ژمارەی تەلەفۆن'],
+  send: ['SEND REQUEST', 'إرسال الطلب', 'ناردنی داواکاری'],
+  sent: ['Request received. We will contact you.', 'تم استلام الطلب. سنتواصل معك.', 'داواکارییەکە گەیشت. پەیوەندیت پێوە دەکەین.'],
+  fail: ['Something went wrong. Please try again later.', 'حدث خطأ. حاول لاحقاً.', 'هەڵەیەک ڕوویدا. دواتر هەوڵ بدەرەوە.'],
+  inGame: ['In the game you can also do this: Settings → Delete my account.', 'يمكنك أيضاً فعل ذلك داخل اللعبة: الإعدادات ← حذف حسابي.', 'لە ناو یارییەکەشدا دەتوانیت ئەمە بکەیت: ڕێکخستنەکان ← سڕینەوەی هەژمار.'],
+  contactUs: ['Contact:', 'للتواصل:', 'پەیوەندی:'],
+};
+const IDX = { en: 0, ar: 1, ku: 2 };
+let lang = (new URLSearchParams(location.search).get('lang')) || ((navigator.language || '').startsWith('ar') ? 'ar' : /^(ckb|ku)/.test(navigator.language || '') ? 'ku' : 'en');
+try { const s = JSON.parse(localStorage.getItem('trackfire-settings') || '{}'); if (s.lang) lang = s.lang; } catch (e) {}
+const t = (k) => (S[k] || [k])[IDX[lang]] || S[k][0];
+function apply() {
+  document.documentElement.lang = lang === 'ku' ? 'ckb' : lang; document.documentElement.dir = lang === 'en' ? 'ltr' : 'rtl';
+  document.querySelectorAll('[data-t]').forEach(e => e.textContent = t(e.dataset.t));
+  document.getElementById('delNow').textContent = t('delBtn');
+  document.querySelectorAll('#langs button').forEach(b => b.setAttribute('aria-pressed', b.dataset.l === lang));
+  document.title = t('title');
+}
+document.getElementById('langs').onclick = (e) => { const b = e.target.closest('button'); if (b) { lang = b.dataset.l; apply(); } };
+let acc = null; try { acc = JSON.parse(localStorage.getItem('kt-account') || 'null'); } catch (e) {}
+if (acc && acc.id) { document.getElementById('here').hidden = false; document.getElementById('hereId').textContent = acc.name + '#' + acc.tag; }
+document.getElementById('sure').onchange = (e) => { document.getElementById('delNow').disabled = !e.target.checked; };
+document.getElementById('delNow').onclick = async () => {
+  const msg = document.getElementById('delMsg');
+  try {
+    const r = await fetch('/api/delete-account', { method: 'POST', headers: { Authorization: `Bearer ${acc.id}.${acc.secret}` } });
+    if (!r.ok) throw new Error();
+    try { localStorage.removeItem('kt-account'); } catch (e) {}
+    msg.className = 'ok'; msg.textContent = t('deleted'); document.getElementById('delNow').disabled = true;
+  } catch (e) { msg.className = 'err'; msg.textContent = t('fail'); }
+};
+document.getElementById('reqForm').onsubmit = async (e) => {
+  e.preventDefault(); const msg = document.getElementById('reqMsg');
+  try {
+    const r = await fetch('/api/delete-request', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ player: document.getElementById('pid').value, contact: document.getElementById('contact').value }) });
+    if (!r.ok) throw new Error();
+    msg.className = 'ok'; msg.textContent = t('sent'); e.target.querySelector('button').disabled = true;
+  } catch (err) { msg.className = 'err'; msg.textContent = t('fail'); }
+};
+fetch('/api/info').then(r => r.json()).then(i => { document.getElementById('mail').textContent = i.contact || '—'; }).catch(() => {});
+apply();
+</script>
+</body>
+</html>

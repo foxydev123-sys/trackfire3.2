@@ -1,0 +1,160 @@
+<title>Kurdish Tank Promo Studio</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bungee&family=Chakra+Petch:wght@500;600;700&family=Barlow:wght@400;500;600&family=Noto+Kufi+Arabic:wght@500;700;800&display=swap">
+<style>
+:root{--bg:#0f1214;--panel:#161a1d;--panel2:#1d2226;--line:#2a3136;--ink:#f1ece2;--mute:#9aa2a8;--acc:#f5a53c;--acc-ink:#1b1206;color-scheme:dark}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.55 "Barlow",system-ui,sans-serif;padding-inline:16px;padding-block:18px 60px}
+.wrap{max-width:1180px;margin:0 auto;display:grid;gap:18px}
+h1{margin:0;font:400 28px/1.05 "Bungee",Impact,sans-serif;color:var(--acc)}
+h2{margin:0 0 6px;font:700 20px "Chakra Petch",sans-serif;text-wrap:balance}
+.lead{margin:6px 0 0;color:#cfc9bf;max-width:68ch}
+.flag{display:inline-flex;flex-direction:column;width:54px;height:16px;border-radius:2px;overflow:hidden;vertical-align:middle;margin-inline-start:10px;position:relative}
+.flag i{flex:1}.flag i:nth-child(1){background:#ed2024}.flag i:nth-child(2){background:#f7f7f2}.flag i:nth-child(3){background:#278e43}
+.flag b{position:absolute;left:50%;top:50%;width:6px;height:6px;margin:-3px;border-radius:50%;background:#febd11}
+.box{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:16px 18px}
+.tabs{display:flex;gap:6px;flex-wrap:wrap}
+.tabs button{font:700 13px "Chakra Petch",sans-serif;letter-spacing:.08em;text-transform:uppercase;padding:9px 14px;border-radius:5px;border:1px solid var(--line);background:var(--panel);color:var(--mute);cursor:pointer}
+.tabs button[aria-selected="true"]{background:var(--acc);border-color:var(--acc);color:var(--acc-ink)}
+.ctl{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px 18px;align-items:end}
+.ctl label{display:flex;flex-direction:column;gap:6px;font:700 11px "Chakra Petch",sans-serif;letter-spacing:.14em;color:var(--mute);text-transform:uppercase}
+.seg{display:inline-flex;flex-wrap:wrap;border:1px solid var(--line);border-radius:6px;overflow:hidden}
+.seg button{font:700 13px "Chakra Petch","Noto Kufi Arabic",sans-serif;padding:8px 12px;border:0;background:transparent;color:#c9cfd3;cursor:pointer}
+.seg button[aria-pressed="true"]{background:var(--acc);color:var(--acc-ink)}
+select,input[type=text]{font:600 15px "Chakra Petch","Noto Kufi Arabic",sans-serif;padding:9px 11px;border-radius:6px;border:1px solid var(--line);background:#0c0f11;color:var(--ink);width:100%;min-width:0}
+button:focus-visible,select:focus-visible,input:focus-visible{outline:2px solid var(--acc);outline-offset:2px}
+.go{font:700 17px "Chakra Petch",sans-serif;letter-spacing:.1em;padding:13px 20px;border-radius:6px;border:0;background:var(--acc);color:var(--acc-ink);cursor:pointer}
+.go:disabled{opacity:.5;cursor:default}
+.status{color:var(--mute);font:600 13px "Chakra Petch",sans-serif}
+.gallery{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:12px;align-items:start}
+.shot{margin:0;background:var(--panel2);border:1px solid var(--line);border-radius:8px;overflow:hidden}
+.shot.wide{grid-column:span 2}
+@media (max-width:420px){.shot.wide{grid-column:auto}}
+.shot img{display:block;width:100%;height:auto;cursor:zoom-in;background:#000}
+.shot figcaption{padding:7px 9px;display:flex;flex-direction:column;font-size:13px}
+.shot figcaption span{color:var(--mute);font-size:12px}
+.empty{color:var(--mute);border:1px dashed var(--line);border-radius:8px;padding:28px;text-align:center}
+.big{position:fixed;inset:0;z-index:20;background:rgba(0,0,0,.92);display:grid;place-items:center;padding:12px;cursor:zoom-out}
+.big img{max-width:100%;max-height:calc(100% - 40px);object-fit:contain}
+.big p{margin:8px 0 0;color:#ddd;font-size:13px;text-align:center}
+[hidden]{display:none!important}
+/* kit */
+.kit{display:grid;gap:14px}
+.kit h3{margin:0 0 6px;font:700 16px "Chakra Petch",sans-serif;color:var(--acc)}
+.kit ol,.kit ul{margin:4px 0;padding-inline-start:22px;display:grid;gap:6px;color:#d6d1c7}
+.copyrow{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px;align-items:start;margin-bottom:8px}
+.copyrow pre{margin:0;white-space:pre-wrap;word-break:break-word;font:15px/1.6 "Barlow","Noto Kufi Arabic",sans-serif;background:#0c0f11;border:1px solid var(--line);border-radius:6px;padding:10px 12px}
+.copyrow pre[dir="rtl"]{font-family:"Noto Kufi Arabic",sans-serif;text-align:right}
+.copyrow button{font:700 12px "Chakra Petch",sans-serif;letter-spacing:.08em;padding:9px 12px;border-radius:6px;border:1px solid var(--line);background:var(--panel2);color:var(--ink);cursor:pointer}
+.two{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:14px}
+.idea b{color:var(--ink)}
+.tip{border-inline-start:3px solid var(--acc);padding:6px 12px;color:#e6dccb;background:rgba(245,165,60,.07);border-radius:0 6px 6px 0}
+</style>
+
+<div class="wrap">
+  <header>
+    <h1>Kurdish Tank · Promo Studio<span class="flag" aria-hidden="true"><i></i><i></i><i></i><b></b></span></h1>
+    <p class="lead">Pictures for TikTok and other socials, made with the real game in your browser. Pick the language and the headline, then press the button. It makes six scenes in three sizes, plus a profile picture.</p>
+  </header>
+
+  <nav class="tabs" role="tablist">
+    <button type="button" role="tab" aria-selected="true" data-tab="pics">Pictures</button>
+    <button type="button" role="tab" aria-selected="false" data-tab="kit">TikTok starter kit</button>
+  </nav>
+
+  <section id="tab-pics" class="box" style="display:grid;gap:16px">
+    <div class="ctl">
+      <label>Text on the pictures
+        <span class="seg" id="langSeg"><button type="button" data-l="ku">کوردی</button><button type="button" data-l="ar">العربية</button><button type="button" data-l="en">English</button><button type="button" data-l="none">No text</button></span>
+      </label>
+      <label for="head">Headline<select id="head"></select></label>
+      <label for="link">Your game link (optional)<input type="text" id="link" placeholder="kurdishtank.onrender.com" autocomplete="off" spellcheck="false" dir="ltr"></label>
+    </div>
+    <div style="display:flex;flex-wrap:wrap;gap:12px;align-items:center">
+      <button class="go" id="go" type="button" disabled>MAKE THE PICTURES</button>
+      <span class="status" id="status" role="status">Loading the 3D engine…</span>
+    </div>
+    <p class="tip">To save a picture: tap it to open it full size. On a phone, press and hold the picture, then choose <b>Save to Photos</b> (or take a screenshot). On a computer, right-click it and choose <b>Save image as</b>.</p>
+    <div class="gallery" id="gallery"><div class="empty">Your pictures will appear here.</div></div>
+  </section>
+
+  <section id="tab-kit" class="box kit" hidden>
+    <div>
+      <h2>Set up the account (10 minutes)</h2>
+      <ol>
+        <li>Download TikTok and sign up. Username ideas: <b>@kurdishtank</b>, <b>@tanki.kurdi</b>, <b>@kurdish.tank.game</b>.</li>
+        <li>Use the <b>profile picture</b> from the Pictures tab.</li>
+        <li>Go to Settings → Account → <b>Switch to Business Account</b> (free). This lets you put your game link in your bio straight away. Personal accounts need about 1,000 followers first.</li>
+        <li>Paste one of the bios below, and put your game link (your Render address) in the <b>Website</b> field.</li>
+      </ol>
+    </div>
+    <div>
+      <h3>Bio (copy one)</h3>
+      <div class="copyrow"><pre dir="rtl">🎮 تانکی کوردی — شەڕی تانک لە هەولێر
+بەخۆڕایی · بێ دابەزاندن · لەگەڵ هاوڕێکانت 👇</pre><button type="button" data-copy>COPY</button></div>
+      <div class="copyrow"><pre dir="rtl">🎮 الدبابة الكردية — معارك دبابات في هولير
+مجاناً · بدون تحميل · العب مع أصدقائك 👇</pre><button type="button" data-copy>COPY</button></div>
+      <div class="copyrow"><pre>🎮 Kurdish Tank — tank battles in Hawler
+Free · no download · play with friends 👇</pre><button type="button" data-copy>COPY</button></div>
+    </div>
+    <div class="two">
+      <div>
+        <h3>10 video ideas (short, 10–25 seconds)</h3>
+        <ol>
+          <li class="idea"><b>“Kurdistan now has its own tank game”</b> — fast clip driving round the Citadel.</li>
+          <li class="idea"><b>“Can you drive around Hawler Citadel?”</b> — one lap of the ring road.</li>
+          <li class="idea"><b>“1 shot = 1 tank”</b> — grab the red one-shot power-up and use it.</li>
+          <li class="idea"><b>Me vs my friends</b> — a funny moment from a real match with friends.</li>
+          <li class="idea"><b>“Which map is best?”</b> — Hawler, desert, forest; ask people to vote in the comments.</li>
+          <li class="idea"><b>Shield saves me</b> — take hits with the blue shield, then win.</li>
+          <li class="idea"><b>“Made by a Kurd”</b> — tell the story of making the game (people love this).</li>
+          <li class="idea"><b>Speed run in Shar Park</b> — speed boost through the park and fountain.</li>
+          <li class="idea"><b>Language switch</b> — show the game in Kurdish, Arabic, then English.</li>
+          <li class="idea"><b>Challenge</b> — “Beat me in my room: code F7K2Q”, then post the results.</li>
+        </ol>
+      </div>
+      <div>
+        <h3>How to record and post</h3>
+        <ul>
+          <li>Record with your phone's screen recorder while playing (landscape), then crop to vertical in TikTok or CapCut.</li>
+          <li>First second matters most: start with an explosion or a kill, not the menu.</li>
+          <li>Add big text in Kurdish on the video, and use a trending sound.</li>
+          <li>Post once a day for 2 weeks, in the evening (about 7–10 pm Kurdistan time).</li>
+          <li>Reply to comments with a new video. It's the fastest way to grow.</li>
+          <li>End every video with “link in bio — free, no download”.</li>
+        </ul>
+        <h3 style="margin-top:12px">How to tell if people like it</h3>
+        <ul>
+          <li>In TikTok: <b>Views</b>, <b>Profile views</b> and <b>Website clicks</b> (Business account analytics).</li>
+          <li>On your server: open <b>your-link/stats</b> to see how many rooms are being played right now.</li>
+          <li>Good early signs: people asking for the link, tagging friends, or asking for new maps.</li>
+        </ul>
+      </div>
+    </div>
+    <div>
+      <h3>Captions with hashtags (copy one)</h3>
+      <div class="copyrow"><pre dir="rtl">شەڕی تانک لە قەڵای هەولێر 🔥 کێ دەتوانێت بمبەزێنێت؟ لینک لە بایۆ — بەخۆڕایی 🎮
+#تانکی_کوردی #هەولێر #کوردستان #kurdistan #hawler #erbil #kurdish #gaming #fyp</pre><button type="button" data-copy>COPY</button></div>
+      <div class="copyrow"><pre dir="rtl">معركة دبابات عند قلعة أربيل 🔥 مين يقدر يغلبني؟ الرابط في البايو — مجاناً 🎮
+#الدبابة_الكردية #اربيل #هولير #كردستان #العاب #kurdistan #erbil #gaming #fyp</pre><button type="button" data-copy>COPY</button></div>
+      <div class="copyrow"><pre>Tank battle at Hawler Citadel 🔥 Who can beat me? Link in bio — free, no download 🎮
+#kurdishtank #kurdistan #hawler #erbil #kurdish #indiegame #browsergame #gaming #fyp</pre><button type="button" data-copy>COPY</button></div>
+    </div>
+  </section>
+</div>
+
+<div class="big" id="big" hidden><div style="display:grid;justify-items:center;max-height:100%"><img id="bigImg" alt="Full-size picture"><p>Press and hold (phone) or right-click (computer) to save. Tap anywhere to close.</p></div></div>
+
+<script>
+document.querySelectorAll('.tabs button').forEach(b => b.addEventListener('click', () => {
+  document.querySelectorAll('.tabs button').forEach(x => x.setAttribute('aria-selected', x === b ? 'true' : 'false'));
+  document.getElementById('tab-pics').hidden = b.dataset.tab !== 'pics';
+  document.getElementById('tab-kit').hidden = b.dataset.tab !== 'kit';
+}));
+document.querySelectorAll('[data-copy]').forEach(b => b.addEventListener('click', () => {
+  const pre = b.previousElementSibling, txt = pre.textContent;
+  const ok = () => { b.textContent = 'COPIED'; setTimeout(() => b.textContent = 'COPY', 1400); };
+  try { navigator.clipboard.writeText(txt).then(ok, sel); } catch (e) { sel(); }
+  function sel() { const r = document.createRange(); r.selectNodeContents(pre); const s = getSelection(); s.removeAllRanges(); s.addRange(r); b.textContent = 'SELECTED'; }
+}));
+</script>
+<script type="module" src="js/studio.js"></script>

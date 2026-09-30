@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Kurdish Tank privacy policy</title>
+<link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32.png">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@600;700&family=Barlow:wght@400;600&family=Noto+Kufi+Arabic:wght@500;700&display=swap">
+<style>
+:root{--bg:#101315;--ink:#f4efe6;--mute:#aeb5ba;--acc:#f5a53c;color-scheme:dark}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.6 "Barlow",system-ui,sans-serif;padding:24px 16px 48px}
+html[dir=rtl] body{font-family:"Noto Kufi Arabic",system-ui,sans-serif;line-height:1.8}
+main{max-width:720px;margin:0 auto}
+h1{font:700 28px/1.2 "Chakra Petch",sans-serif;color:var(--acc);margin:8px 0 4px}
+h2{font:700 18px "Chakra Petch",sans-serif;margin:26px 0 6px}
+html[dir=rtl] h1,html[dir=rtl] h2{font-family:"Noto Kufi Arabic",sans-serif}
+ul{padding-inline-start:20px;margin:6px 0}
+a{color:var(--acc)}
+.muted{color:var(--mute)}
+.langs{display:flex;gap:6px;justify-content:flex-end}
+.langs button{border:1px solid rgba(255,255,255,.25);background:transparent;color:#fff;border-radius:6px;padding:5px 10px;font:600 13px "Noto Kufi Arabic","Chakra Petch",sans-serif;cursor:pointer}
+.langs button[aria-pressed=true]{background:var(--acc);color:#1b1206;border-color:var(--acc)}
+b.id{unicode-bidi:isolate;direction:ltr}
+</style>
+</head>
+<body>
+<main>
+  <div class="langs" id="langs"><button data-l="ku">کوردی</button><button data-l="ar">العربية</button><button data-l="en">English</button></div>
+  <div id="doc"></div>
+</main>
+<script>
+// Each section: [heading, [paragraphs or list items]] in en / ar / ku. Keep this accurate if the game changes.
+const DOC = {
+  en: { title: 'Kurdish Tank privacy policy', updated: 'Last updated: {d}', sections: [
+    ['Who we are', ['Kurdish Tank is an online tank game. Questions about privacy: {mail}.']],
+    ['What we store', ['*Your player name and player ID (for example Solomon#4821).', '*Game data: rank, rank points, stats, match history, coins, gems, tanks, chests, quests and daily rewards.', '*Your friends list, friend requests, blocks, and chat messages between you and your friends (we keep about the last 300 messages of each chat).', '*Reports you send about other players, including the recent chat with that player, so we can check them.', '*Receipts for gems bought with real money: product, time and Google order number. Payment details (card, bank) are handled by Google Play; we never see them.']],
+    ['What we do not collect', ['We do not ask for your real name, email, phone number, location, contacts or photos. There are no ads and no tracking or analytics companies. We never sell data.']],
+    ['Technical data', ['Your device connects to our server over the internet, so the server sees your IP address while you play. It is used only to run the game and to limit abuse (for example too many new accounts), and it is not saved in the database. Your settings and your account key are stored on your own device.', 'The game loads fonts from Google Fonts and its 3D engine from jsDelivr. Those services receive your IP address when the game loads.']],
+    ['Why we use it', ['To run matches, matchmaking and ranks, show leaderboards and profiles, let you chat with friends, keep players safe (filter, reports, blocks), and give you what you bought.']],
+    ['Who can see it', ['Other players can see your player name, ID, rank, stats and recent matches. Only you and that friend can see your chat. Nobody else gets your data, unless the law requires it.']],
+    ['How long we keep it', ['As long as your account exists. When you delete it, everything above is removed straight away, except purchase receipts, which are kept without your name because tax and refund rules require it.']],
+    ['Delete your account', ['In the game: Settings → Delete my account. Or on the web: {del}.']],
+    ['Children', ['Kurdish Tank is not made for children under 13 and we do not knowingly collect data from them. If you think a child under 13 has an account, contact us and we will delete it.']],
+    ['Changes', ['If this policy changes we update this page and the date at the top.']],
+  ] },
+  ar: { title: 'سياسة الخصوصية لـ الدبابة الكردية', updated: 'آخر تحديث: {d}', sections: [
+    ['من نحن', ['الدبابة الكردية لعبة دبابات أونلاين. لأسئلة الخصوصية: {mail}.']],
+    ['ما الذي نحفظه', ['*اسمك في اللعبة ومعرّف اللاعب (مثل Solomon#4821).', '*بيانات اللعب: الرتبة ونقاطها والإحصائيات وسجل المباريات والعملات والجواهر والدبابات والصناديق والمهام والمكافآت اليومية.', '*قائمة أصدقائك وطلبات الصداقة والحظر، ورسائل الدردشة بينك وبين أصدقائك (نحتفظ بآخر 300 رسالة تقريباً لكل محادثة).', '*البلاغات التي ترسلها عن لاعبين آخرين مع الدردشة الأخيرة معهم، لكي نتحقق منها.', '*إيصالات الجواهر المشتراة بالمال الحقيقي: المنتج والوقت ورقم طلب Google. تفاصيل الدفع (البطاقة والبنك) يتعامل معها Google Play ولا نراها أبداً.']],
+    ['ما الذي لا نجمعه', ['لا نطلب اسمك الحقيقي أو بريدك أو رقم هاتفك أو موقعك أو جهات الاتصال أو الصور. لا توجد إعلانات ولا شركات تتبع أو تحليلات. ولا نبيع البيانات أبداً.']],
+    ['البيانات التقنية', ['يتصل جهازك بخادمنا عبر الإنترنت، لذا يرى الخادم عنوان IP أثناء اللعب. يُستخدم فقط لتشغيل اللعبة والحد من الإساءة (مثل إنشاء حسابات كثيرة) ولا يُحفظ في قاعدة البيانات. إعداداتك ومفتاح حسابك محفوظة على جهازك.', 'تحمّل اللعبة الخطوط من Google Fonts ومحرك الرسومات ثلاثية الأبعاد من jsDelivr، وتتلقى هذه الخدمات عنوان IP عند تحميل اللعبة.']],
+    ['لماذا نستخدمها', ['لتشغيل المباريات والمطابقة والرتب، وعرض المتصدرين والملفات الشخصية، والدردشة مع الأصدقاء، وحماية اللاعبين (الفلتر والبلاغات والحظر)، وإعطائك ما اشتريته.']],
+    ['من يمكنه رؤيتها', ['يرى اللاعبون الآخرون اسمك ومعرّفك ورتبتك وإحصائياتك وآخر مبارياتك. الدردشة يراها أنت وصديقك فقط. لا يحصل أحد آخر على بياناتك إلا إذا طلب القانون ذلك.']],
+    ['مدة الاحتفاظ', ['طالما حسابك موجود. عند حذفه تُزال كل البيانات أعلاه فوراً، ما عدا إيصالات الشراء التي تُحفظ بدون اسمك لأن قوانين الضرائب والاسترداد تتطلب ذلك.']],
+    ['حذف حسابك', ['داخل اللعبة: الإعدادات ← حذف حسابي. أو عبر الويب: {del}.']],
+    ['الأطفال', ['الدبابة الكردية ليست مصممة للأطفال دون 13 عاماً ولا نجمع بياناتهم عن قصد. إذا كان لطفل دون 13 عاماً حساب، تواصل معنا وسنحذفه.']],
+    ['التغييرات', ['إذا تغيرت هذه السياسة نحدّث هذه الصفحة والتاريخ في أعلاها.']],
+  ] },
+  ku: { title: 'سیاسەتی تایبەتمەندی تانکی کوردی', updated: 'دوایین نوێکردنەوە: {d}', sections: [
+    ['ئێمە کێین', ['تانکی کوردی یارییەکی تانکی ئۆنلاینە. بۆ پرسیاری تایبەتمەندی: {mail}.']],
+    ['چی هەڵدەگرین', ['*ناوت لە یارییەکەدا و ناسنامەی یاریزان (وەک Solomon#4821).', '*زانیاری یاری: پلە و خاڵەکانی، ئامار، مێژووی یارییەکان، دراو، گەوهەر، تانک، سندوق، ئەرک و خەڵاتی ڕۆژانە.', '*لیستی هاوڕێکانت، داواکاریی هاوڕێیەتی، بلۆکەکان، و نامەکانی چات لە نێوان تۆ و هاوڕێکانت (نزیکەی دوایین 300 نامەی هەر چاتێک دەهێڵینەوە).', '*ئەو ڕاپۆرتانەی دەربارەی یاریزانی تر دەینێریت، لەگەڵ دوایین چاتی ئەو یاریزانە، بۆ ئەوەی بیپشکنین.', '*پسووڵەی ئەو گەوهەرانەی بە پارەی ڕاستەقینە کڕدراون: بەرهەم، کات و ژمارەی داواکاریی Google. زانیاریی پارەدان (کارت، بانک) Google Play مامەڵەی لەگەڵ دەکات و ئێمە هەرگیز نایبینین.']],
+    ['چی کۆ ناکەینەوە', ['داوای ناوی ڕاستەقینە، ئیمەیڵ، ژمارەی تەلەفۆن، شوێن، ژمارەکانی پەیوەندی یان وێنەکانت ناکەین. ڕیکلام نییە و هیچ کۆمپانیایەکی بەدواداچوون یان شیکاری نییە. هەرگیز زانیاری نافرۆشین.']],
+    ['زانیاریی تەکنیکی', ['ئامێرەکەت لە ڕێگەی ئینتەرنێتەوە بە سێرڤەرەکەمانەوە دەبەسترێت، بۆیە سێرڤەر لە کاتی یاریکردندا ناونیشانی IP دەبینێت. تەنها بۆ کارپێکردنی یاری و ڕێگری لە خراپ بەکارهێنان (وەک دروستکردنی هەژماری زۆر) بەکاردێت و لە بنکەی زانیاریدا هەڵناگیرێت. ڕێکخستنەکان و کلیلی هەژمارەکەت لەسەر ئامێری خۆت دەمێننەوە.', 'یارییەکە فۆنتەکان لە Google Fonts و بزوێنەری سێ ڕەهەندی لە jsDelivr بار دەکات، و ئەو خزمەتگوزارییانە لە کاتی بارکردندا ناونیشانی IP وەردەگرن.']],
+    ['بۆچی بەکاری دەهێنین', ['بۆ کارپێکردنی یاری، دۆزینەوەی یاریزان و پلەکان، پیشاندانی پێشەنگەکان و پرۆفایلەکان، چات لەگەڵ هاوڕێکان، پاراستنی یاریزانان (فلتەر، ڕاپۆرت، بلۆک)، و پێدانی ئەوەی کڕیوتە.']],
+    ['کێ دەیبینێت', ['یاریزانانی تر ناو، ناسنامە، پلە، ئامار و دوایین یارییەکانت دەبینن. چاتەکەت تەنها تۆ و ئەو هاوڕێیە دەیبینن. کەسی تر زانیارییەکانت وەرناگرێت، مەگەر یاسا داوای بکات.']],
+    ['چەند دەیهێڵینەوە', ['تا هەژمارەکەت هەبێت. کاتێک دەیسڕیتەوە هەموو ئەوانەی سەرەوە یەکسەر لادەبرێن، جگە لە پسووڵەی کڕین کە بێ ناوەکەت دەمێنێتەوە چونکە یاساکانی باج و گەڕاندنەوە داوای دەکەن.']],
+    ['سڕینەوەی هەژمار', ['لە ناو یارییەکەدا: ڕێکخستنەکان ← سڕینەوەی هەژمار. یان لە وێبدا: {del}.']],
+    ['منداڵان', ['تانکی کوردی بۆ منداڵانی خوار 13 ساڵ دروست نەکراوە و بە ئەنقەست زانیارییان کۆ ناکەینەوە. ئەگەر پێت وایە منداڵێکی خوار 13 ساڵ هەژماری هەیە، پەیوەندیمان پێوە بکە و دەیسڕینەوە.']],
+    ['گۆڕانکاری', ['ئەگەر ئەم سیاسەتە گۆڕا، ئەم پەڕەیە و بەرواری سەرەوە نوێ دەکەینەوە.']],
+  ] },
+};
+const UPDATED = '2026-09-26';
+let lang = (new URLSearchParams(location.search).get('lang')) || ((navigator.language || '').startsWith('ar') ? 'ar' : /^(ckb|ku)/.test(navigator.language || '') ? 'ku' : 'en');
+try { const s = JSON.parse(localStorage.getItem('trackfire-settings') || '{}'); if (s.lang && !new URLSearchParams(location.search).get('lang')) lang = s.lang; } catch (e) {}
+let mail = '';
+const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
+function render() {
+  const D = DOC[lang] || DOC.en, del = location.origin + '/delete-account';
+  const fill = (s) => esc(s).replace('{mail}', `<b class="id">${esc(mail || '—')}</b>`).replace('{del}', `<a href="/delete-account" class="id">${esc(del)}</a>`).replace('{d}', UPDATED);
+  let h = `<h1>${esc(D.title)}</h1><p class="muted">${fill(D.updated)}</p>`;
+  for (const [head, parts] of D.sections) {
+    h += `<h2>${esc(head)}</h2>`;
+    const items = parts.filter(p => p.startsWith('*')), paras = parts.filter(p => !p.startsWith('*'));
+    h += paras.map(p => `<p>${fill(p)}</p>`).join('') + (items.length ? `<ul>${items.map(p => `<li>${fill(p.slice(1))}</li>`).join('')}</ul>` : '');
+  }
+  document.getElementById('doc').innerHTML = h;
+  document.documentElement.lang = lang === 'ku' ? 'ckb' : lang; document.documentElement.dir = lang === 'en' ? 'ltr' : 'rtl';
+  document.title = D.title;
+  document.querySelectorAll('#langs button').forEach(b => b.setAttribute('aria-pressed', b.dataset.l === lang));
+}
+document.getElementById('langs').onclick = (e) => { const b = e.target.closest('button'); if (b) { lang = b.dataset.l; render(); } };
+fetch('/api/info').then(r => r.json()).then(i => { mail = i.contact || ''; render(); }).catch(() => {});
+render();
+</script>
+</body>
+</html>
